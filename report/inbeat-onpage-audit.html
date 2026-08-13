@@ -1,0 +1,618 @@
+<title>inBeat On-Page Audit</title>
+<style>
+:root{
+  --paper:#FAF9FB;
+  --surface:#FFFFFF;
+  --surface-2:#F2F0F5;
+  --ink:#1A1420;
+  --ink-2:#4A4353;
+  --muted:#736C80;
+  --line:#E2DEE8;
+  --line-2:#CFC9D9;
+  --accent:#8C1D3F;
+  --accent-soft:#F5E6EC;
+  --crit:#A3201B;
+  --crit-bg:#F8E7E6;
+  --high:#8A4B00;
+  --high-bg:#FBEEDD;
+  --med:#3F5A8A;
+  --med-bg:#E7EDF7;
+  --ok:#1D6249;
+  --ok-bg:#E3F1EB;
+  --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#14111A;
+    --surface:#1C1824;
+    --surface-2:#241F2E;
+    --ink:#F0EDF4;
+    --ink-2:#C4BDD0;
+    --muted:#948CA3;
+    --line:#302A3C;
+    --line-2:#453D54;
+    --accent:#E8829F;
+    --accent-soft:#33202A;
+    --crit:#F09490;
+    --crit-bg:#3A2120;
+    --high:#E3B071;
+    --high-bg:#362718;
+    --med:#9CB6E0;
+    --med-bg:#1F2735;
+    --ok:#7FC9AC;
+    --ok-bg:#182E27;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14111A;
+  --surface:#1C1824;
+  --surface-2:#241F2E;
+  --ink:#F0EDF4;
+  --ink-2:#C4BDD0;
+  --muted:#948CA3;
+  --line:#302A3C;
+  --line-2:#453D54;
+  --accent:#E8829F;
+  --accent-soft:#33202A;
+  --crit:#F09490;
+  --crit-bg:#3A2120;
+  --high:#E3B071;
+  --high-bg:#362718;
+  --med:#9CB6E0;
+  --med-bg:#1F2735;
+  --ok:#7FC9AC;
+  --ok-bg:#182E27;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:940px;margin:0 auto;padding:0 24px 96px}
+
+/* ---------- masthead ---------- */
+header.masthead{
+  border-bottom:2px solid var(--ink);
+  padding:56px 0 24px;
+  margin-bottom:40px;
+}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin:0 0 18px;
+}
+h1{
+  font-size:clamp(34px,5.5vw,52px);
+  line-height:1.05;
+  letter-spacing:-.028em;
+  font-weight:750;
+  margin:0 0 16px;
+  text-wrap:balance;
+}
+.standfirst{
+  font-size:18px;
+  line-height:1.55;
+  color:var(--ink-2);
+  max-width:60ch;
+  margin:0 0 28px;
+}
+.meta-line{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 22px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--muted);
+}
+.meta-line span strong{color:var(--ink-2);font-weight:600}
+
+/* ---------- scoreboard ---------- */
+.scoreboard{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  margin:0 0 52px;
+}
+.score{
+  background:var(--surface);
+  padding:20px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.score .n{
+  font-size:32px;
+  font-weight:700;
+  letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;
+  line-height:1;
+}
+.score .l{
+  font-size:12.5px;
+  line-height:1.35;
+  color:var(--muted);
+}
+.score.crit .n{color:var(--crit)}
+.score.high .n{color:var(--high)}
+.score.ok .n{color:var(--ok)}
+
+/* ---------- sections ---------- */
+section{margin:0 0 56px}
+h2{
+  font-size:13px;
+  font-family:var(--mono);
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--ink);
+  font-weight:600;
+  margin:0 0 6px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--line-2);
+}
+.sec-note{
+  font-size:14.5px;
+  color:var(--muted);
+  margin:14px 0 26px;
+  max-width:66ch;
+}
+h3{
+  font-size:20px;
+  letter-spacing:-.015em;
+  font-weight:680;
+  margin:0 0 10px;
+  text-wrap:balance;
+}
+p{margin:0 0 14px;max-width:68ch}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* ---------- findings ---------- */
+.finding{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-left:4px solid var(--line-2);
+  padding:22px 24px;
+  margin:0 0 14px;
+}
+.finding.f-crit{border-left-color:var(--crit)}
+.finding.f-high{border-left-color:var(--high)}
+.finding.f-med{border-left-color:var(--med)}
+.f-head{
+  display:flex;
+  align-items:baseline;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.chip{
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  font-weight:600;
+  padding:3px 8px;
+  border-radius:2px;
+  white-space:nowrap;
+}
+.chip.crit{background:var(--crit-bg);color:var(--crit)}
+.chip.high{background:var(--high-bg);color:var(--high)}
+.chip.med{background:var(--med-bg);color:var(--med)}
+.chip.ok{background:var(--ok-bg);color:var(--ok)}
+.f-head h3{margin:0;flex:1 1 300px}
+.finding p:last-child{margin-bottom:0}
+.finding p{max-width:none}
+
+code,.mono{
+  font-family:var(--mono);
+  font-size:.86em;
+  background:var(--surface-2);
+  padding:1px 5px;
+  border-radius:3px;
+  word-break:break-word;
+}
+pre{
+  font-family:var(--mono);
+  font-size:12.5px;
+  line-height:1.6;
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  padding:14px 16px;
+  overflow-x:auto;
+  margin:0 0 14px;
+}
+pre code{background:none;padding:0;font-size:inherit}
+.verdict{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px dashed var(--line-2);
+  font-size:14px;
+  color:var(--ink-2);
+}
+.verdict b{color:var(--ink);font-weight:650}
+
+ul,ol{margin:0 0 14px;padding-left:22px}
+li{margin-bottom:7px;max-width:66ch}
+li::marker{color:var(--muted)}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;border:1px solid var(--line);margin:0 0 18px}
+table{border-collapse:collapse;width:100%;font-size:14px;background:var(--surface)}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-weight:600;
+  background:var(--surface-2);
+  white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:none}
+td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+td .mono{font-size:12.5px}
+
+/* ---------- phases ---------- */
+.phase{
+  display:grid;
+  grid-template-columns:52px 1fr;
+  gap:0 20px;
+  padding:24px 0;
+  border-top:1px solid var(--line);
+}
+.phase:last-of-type{border-bottom:1px solid var(--line)}
+.pnum{
+  font-family:var(--mono);
+  font-size:13px;
+  font-weight:600;
+  color:var(--accent);
+  padding-top:3px;
+}
+.pbody h3{margin-bottom:4px}
+.ptag{
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--muted);
+  margin:0 0 12px;
+}
+.pbody p{max-width:64ch}
+.pbody ul{margin-bottom:12px}
+.blocker{
+  display:inline-block;
+  font-family:var(--mono);
+  font-size:10.5px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  background:var(--accent-soft);
+  color:var(--accent);
+  padding:3px 8px;
+  border-radius:2px;
+  margin-top:4px;
+}
+
+/* ---------- needs ---------- */
+.need{
+  background:var(--surface);
+  border:1px solid var(--line);
+  padding:20px 22px;
+  margin:0 0 12px;
+}
+.need h3{font-size:17px;margin-bottom:8px;display:flex;gap:10px;align-items:baseline}
+.need h3 .q{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--accent);
+  font-weight:600;
+  flex-shrink:0;
+}
+.need p:last-child{margin-bottom:0}
+.need p{max-width:none;font-size:15px}
+
+.callout{
+  border:1px solid var(--accent);
+  background:var(--accent-soft);
+  padding:18px 22px;
+  margin:0 0 26px;
+}
+.callout p{margin-bottom:0;max-width:none;font-size:15px;color:var(--ink)}
+.callout strong{font-weight:680}
+
+footer.foot{
+  border-top:2px solid var(--ink);
+  padding-top:20px;
+  margin-top:64px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--muted);
+}
+footer.foot p{max-width:70ch}
+@media (max-width:640px){
+  .phase{grid-template-columns:1fr;gap:8px}
+  .pnum{padding-top:0}
+}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">On-page audit · inbeat.agency</p>
+  <h1>Every blog post is publishing without author or date schema</h1>
+  <p class="standfirst">A one-character mismatch in the blog template kills the Article schema on all 264 posts. A fallback catches it and credits the company instead of the writer — so the 16 author profiles you built are invisible to search and to LLMs.</p>
+  <div class="meta-line">
+    <span><strong>445</strong> sitemap URLs crawled</span>
+    <span><strong>421</strong> live pages parsed</span>
+    <span>Webflow site <strong>65f9d9d2…09ed</strong></span>
+    <span>13 Aug 2026</span>
+  </div>
+</header>
+
+<div class="scoreboard">
+  <div class="score crit"><span class="n">264</span><span class="l">posts with no Article schema</span></div>
+  <div class="score crit"><span class="n">181</span><span class="l">bylines linking to a redirect or nowhere</span></div>
+  <div class="score high"><span class="n">0</span><span class="l">Person schema anywhere on the site</span></div>
+  <div class="score high"><span class="n">257</span><span class="l">titles longer than 60 characters</span></div>
+  <div class="score ok"><span class="n">421</span><span class="l">pages canonicalise correctly</span></div>
+</div>
+
+<section>
+  <h2>What is broken</h2>
+  <p class="sec-note">Ordered by what costs you the most. Each finding was verified against the live HTML or a headless render, not inferred.</p>
+
+  <article class="finding f-crit">
+    <div class="f-head"><span class="chip crit">Critical</span><h3>The Article schema script throws on every post</h3></div>
+    <p>The <code>detail_blog</code> template's footer code builds an <code>Article</code> object, then reads the modified date from <code>#dateUpdated</code>. That element does not exist — the template renders it as <code>id="updatedOn"</code>. <code>querySelector</code> returns <code>null</code>, <code>.innerHTML</code> throws, and the script aborts before injecting anything.</p>
+<pre><code>var dateModified = document.querySelector('#dateUpdated').innerHTML;
+                                           ^^^^^^^^^^^^ renders as #updatedOn</code></pre>
+    <p>Confirmed two ways: <code>id="dateUpdated"</code> appears in <strong>0 of 264</strong> crawled post pages, and a headless render of a live post throws <code>Cannot read properties of null (reading 'innerHTML')</code> with no Article node in the resulting DOM.</p>
+    <div class="verdict"><b>Cost:</b> no article rich results, no author attribution, no freshness signal on the entire blog.</div>
+  </article>
+
+  <article class="finding f-crit">
+    <div class="f-head"><span class="chip crit">Critical</span><h3>The fallback credits the company, not the writer — and drops both dates</h3></div>
+    <p>A second, site-wide script injects a <code>BlogPosting</code> only when no Article schema exists. Because of the bug above, that condition is always true, so this is what actually ships on every post:</p>
+<pre><code>"author": { "@type": "Organization", "name": "inBeat Agency" }
+// no datePublished, no dateModified</code></pre>
+    <p>Google gets a corporate author and zero publication dates, on a blog where the visible byline and both dates are sitting right there in the HTML. Even if the Article script were repaired, it would emit <code>"March 19, 2026"</code> rather than ISO 8601, which is not a valid date value.</p>
+    <div class="verdict"><b>Cost:</b> the E-E-A-T signal you built an Authors collection for never reaches search or AI crawlers.</div>
+  </article>
+
+  <article class="finding f-crit">
+    <div class="f-head"><span class="chip crit">Critical</span><h3>Author bylines point at three different URL patterns</h3></div>
+    <p>Across 264 posts the byline link resolves four different ways:</p>
+    <div class="tw"><table>
+      <thead><tr><th>Byline target</th><th class="num">Posts</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono">/author/{slug}</span></td><td class="num">83</td><td>200 — correct</td></tr>
+        <tr><td><span class="mono">/blog/author/{slug}</span></td><td class="num">147</td><td>301, some two hops</td></tr>
+        <tr><td><span class="mono">href="#"</span></td><td class="num">34</td><td>links nowhere</td></tr>
+      </tbody>
+    </table></div>
+    <p>The redirect chains are real: <code>/blog/author/ioana/</code> → <code>/blog/author/ioana</code> → <code>/author/ioana-cozma</code>. Because the schema builder reads <code>href</code> straight off the byline, a repaired Article script would also publish redirecting or empty author URLs.</p>
+    <div class="verdict"><b>Cost:</b> 68% of author links leak equity through redirects or dead-end entirely.</div>
+  </article>
+
+  <article class="finding f-crit">
+    <div class="f-head"><span class="chip crit">Critical</span><h3>Two competing author page systems, and the sitemap backs the wrong one</h3></div>
+    <p>There are two full sets of author pages, both returning 200 and both self-canonicalising:</p>
+    <div class="tw"><table>
+      <thead><tr><th></th><th><span class="mono">/author/{slug}</span></th><th><span class="mono">/blog-author/author-blog/{slug}</span></th></tr></thead>
+      <tbody>
+        <tr><th>Built as</th><td>CMS template, 16 authors</td><td>8 hand-built static pages</td></tr>
+        <tr><th>Title</th><td>Name | Author | InBeat</td><td>Bare name, e.g. "David Morneau"</td></tr>
+        <tr><th>Meta description</th><td>From bio field</td><td>Missing on 6 of 8</td></tr>
+        <tr><th>H1 count</th><td>1</td><td>2–101</td></tr>
+        <tr><th>In sitemap.xml</th><td>No</td><td>Yes — all 8</td></tr>
+        <tr><th>Posts linking to it</th><td>83</td><td>0</td></tr>
+      </tbody>
+    </table></div>
+    <p>The sitemap submits the weaker duplicates, and nothing on the site links to them. <code>/blog-author/author-blog/ioana-author</code> renders <strong>101 H1 tags</strong> — every post card in the listing is marked up as an H1.</p>
+    <div class="verdict"><b>Cost:</b> the author entity is split across two URLs, so neither accumulates authority.</div>
+  </article>
+
+  <article class="finding f-high">
+    <div class="f-head"><span class="chip high">High</span><h3>No Person or ProfilePage schema exists anywhere</h3></div>
+    <p>Author pages carry only the site-wide Organization graph — the same block that appears on all 421 pages. There is no <code>Person</code> node, no <code>sameAs</code>, no photo, no job title, on any URL. The Authors collection cannot supply them either: it has exactly three fields — Bio, Name, Slug.</p>
+    <div class="verdict"><b>Cost:</b> no author entity for Google or an LLM to attach expertise to.</div>
+  </article>
+
+  <article class="finding f-high">
+    <div class="f-head"><span class="chip high">High</span><h3>Nine of sixteen authors have no bio, and five look like placeholders</h3></div>
+    <p>The author template binds its meta description to the bio field, so an empty bio means no meta description at all — which is why six author pages ship without one.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Author</th><th class="num">Bio</th><th class="num">Posts</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono">sehar-fatima</span></td><td class="num">77 ch</td><td class="num">17</td></tr>
+        <tr><td><span class="mono">yousuf-sharif</span></td><td class="num">empty</td><td class="num">13</td></tr>
+        <tr><td><span class="mono">tereza-spaseska</span></td><td class="num">empty</td><td class="num">6</td></tr>
+        <tr><td><span class="mono">ioana-cozma</span></td><td class="num">196 ch</td><td class="num">4</td></tr>
+        <tr><td><span class="mono">peter</span></td><td class="num">empty</td><td class="num">2</td></tr>
+        <tr><td><span class="mono">precious</span> · <span class="mono">aleksandar-janceski</span></td><td class="num">empty</td><td class="num">1 each</td></tr>
+        <tr><td><span class="mono">jhon</span> · <span class="mono">sarah</span> · <span class="mono">luz</span></td><td class="num">empty</td><td class="num">0</td></tr>
+      </tbody>
+    </table></div>
+    <p>First-name-only records with no bio — plus <code>jhon</code>, which reads as a typo — are live, indexable, and named as article authors. Publishing <code>Person</code> schema for them would make the problem more visible, not less.</p>
+    <div class="verdict"><b>Cost:</b> thin author profiles actively undercut the credibility the byline is meant to establish.</div>
+  </article>
+
+  <article class="finding f-high">
+    <div class="f-head"><span class="chip high">High</span><h3>All structured data is injected by JavaScript</h3></div>
+    <p>Static HTML contains only the Organization + ProfessionalService graph. Breadcrumbs, Article and BlogPosting are all appended to <code>&lt;head&gt;</code> after <code>DOMContentLoaded</code>. Google renders JavaScript, so this mostly works for Google — but GPTBot, ClaudeBot, PerplexityBot and CCBot largely do not. Your <code>robots.txt</code> deliberately invites all of them; they arrive and find no article markup.</p>
+    <div class="verdict"><b>Cost:</b> the AI-crawler access you opened up is spent on pages with no machine-readable article data.</div>
+  </article>
+
+  <article class="finding f-high">
+    <div class="f-head"><span class="chip high">High</span><h3>The dedicated Title Tag field is ignored by the template</h3></div>
+    <p>The Blogs collection has a <code>title-tag</code> field. The template does not use it — it binds the full article <code>name</code> instead, with a stray double space:</p>
+<pre><code>{{name}}  - inBeat Agency        ← double space, and name is often 80+ chars</code></pre>
+    <p>Only 2 of the 100 sampled blog items have <code>title-tag</code> filled. Result across the site: 257 of 421 titles exceed 60 characters, 129 exceed 80, and the longest is 118 — <em>"Short-Form vs Long-Form Video Content: EXPERT Tips to Choose the Best Format for Your…"</em></p>
+    <div class="verdict"><b>Cost:</b> Google rewrites or truncates the majority of your title tags.</div>
+  </article>
+
+  <article class="finding f-med">
+    <div class="f-head"><span class="chip med">Medium</span><h3>Category pages use the URL slug as their meta description</h3></div>
+    <p>The <code>detail_categories</code> template binds description to the <code>slug</code> field, so the ten category pages ship descriptions reading <code>ugc</code>, <code>advertising</code>, <code>ppc-and-google-ads</code>. Titles carry no brand suffix. The Categories collection has only Name and Slug, so there is nothing better to bind to. They also sit at <code>/blog-author/categories/…</code>, nested under the author folder.</p>
+  </article>
+
+  <article class="finding f-med">
+    <div class="f-head"><span class="chip med">Medium</span><h3>Housekeeping across the rest of the site</h3></div>
+    <ul>
+      <li><strong>24 sitemap URLs return 301</strong>, including <code>/blog/ab-testing-ugc-ads</code> → <code>/ugc-agency</code> and <code>/blog/top-digital-marketing-agencies-las-vegas</code> → homepage.</li>
+      <li><strong>264 pages emit an empty <code>&lt;script type="application/ld+json"&gt;&lt;/script&gt;</code></strong> — harmless, but it trips validators.</li>
+      <li><strong><code>og:type</code> is <code>website</code> on all 405 pages that set it</strong>, blog posts included; posts should be <code>article</code>.</li>
+      <li><strong>155 pages have no <code>og:image</code></strong> — all 46 <code>/locations</code>, 15 <code>/territories</code>, 16 <code>/case-studies</code> and 18 <code>/blog-author</code> pages.</li>
+      <li><strong>Breadcrumbs are two levels and stale.</strong> Position 1 is hardcoded to "inBeat - #1 Micro Influencer Agency in North America", which no longer matches the homepage title. Posts get Home → Post with no <code>/blog</code> tier.</li>
+      <li><strong>The homepage FAQ has no FAQPage schema.</strong> Five Q&amp;As render as plain H3s; only 12 service pages carry FAQPage.</li>
+      <li><strong>404 and 401 still carry Webflow template boilerplate</strong> — the 401 title is literally "Lemon - Webflow HTML website template".</li>
+      <li><strong>Blog CMS author fields are half-migrated.</strong> In the 100-item sample: 46 use the current <code>article-author</code> reference, 59 still carry the obsolete <code>author-name</code>, 23 the obsolete <code>author-page</code> link.</li>
+    </ul>
+  </article>
+
+  <article class="finding">
+    <div class="f-head"><span class="chip ok">Clean</span><h3>What is already right</h3></div>
+    <p>All 421 live pages self-canonicalise, with zero missing or mismatched canonicals. Every page has a title and exactly one H1 outside the author templates. Zero images are missing <code>alt</code> across the pages sampled. The <code>robots.txt</code> AI-crawler policy is genuinely well built, including a <code>Content-Signal</code> directive. Organization and ProfessionalService schema for all four offices is correct and complete.</p>
+  </article>
+</section>
+
+<section>
+  <h2>The fix plan, through Webflow MCP</h2>
+  <p class="sec-note">I verified which MCP actions actually exist on this site rather than assuming. Phases are ordered by dependency — the schema rewrite in phase 1 reads author URLs, so the URL consolidation in phase 2 has to land before phase 4 can emit clean Person nodes.</p>
+
+  <div class="callout">
+    <p><strong>Three changes are not reachable through MCP</strong> and need someone in the Webflow Designer or Site Settings: the byline element's link binding, the template's title-tag binding, and all 301 redirects. Everything else below I can do end to end.</p>
+  </div>
+
+  <div class="phase">
+    <div class="pnum">01</div>
+    <div class="pbody">
+      <h3>Repair the blog schema</h3>
+      <p class="ptag">data_scripts_tool › set_page_freeform_code · page 65f9d9d2…0a39</p>
+      <p>Rewrite the <code>detail_blog</code> footer block: point the selector at <code>#updatedOn</code>, convert both dates to ISO 8601 before they enter the JSON, emit the author as a <code>Person</code> with a normalised <code>/author/{slug}</code> URL, and add the missing <code>@id</code>, <code>mainEntityOfPage</code> and <code>wordCount</code>. Then narrow the site-wide fallback so it stops overwriting posts with Organization authorship.</p>
+      <p>This is a single call plus a publish, and it repairs all 264 posts at once. Highest return of anything on this list.</p>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pnum">02</div>
+    <div class="pbody">
+      <h3>Consolidate on one author URL</h3>
+      <p class="ptag">Designer + Site Settings — I can prepare, not execute</p>
+      <p>Settle on <code>/author/{slug}</code>, then: rebind the byline link in the Designer to the <code>article-author</code> reference so all 264 posts resolve consistently; 301 the eight <code>/blog-author/author-blog/*</code> statics onto their CMS equivalents; retire the <code>/blog/author/*</code> pattern.</p>
+      <p>I can generate the full redirect map as a CSV and audit it afterwards, but Webflow's redirect table is not exposed through MCP.</p>
+      <span class="blocker">Needs Designer access</span>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pnum">03</div>
+    <div class="pbody">
+      <h3>Give the Authors collection something to say</h3>
+      <p class="ptag">data_cms_tool › create_collection_static_field, update_collection_items</p>
+      <p>Add the fields the collection is missing: Job Title, Headshot, LinkedIn URL, X/Twitter, Credentials, Years Experience, and a Meta Description separate from the bio. Then populate all 16 records.</p>
+      <p>I can create every field and write every value through MCP. I cannot invent the content — see the requests below.</p>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pnum">04</div>
+    <div class="pbody">
+      <h3>Publish Person and ProfilePage schema</h3>
+      <p class="ptag">data_scripts_tool › set_page_freeform_code · detail_author</p>
+      <p>Add a <code>ProfilePage</code> wrapper with a <code>Person</code> <code>mainEntity</code> bound to the new fields, <code>sameAs</code> pointing at real profiles, and <code>knowsAbout</code> derived from each author's categories. Cross-reference it from the Article <code>author.@id</code> written in phase 1 so the two nodes resolve to one entity.</p>
+      <p>Also fix the duplicate H1s — the post cards on author pages should be H2 or H3, not H1.</p>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pnum">05</div>
+    <div class="pbody">
+      <h3>Clean up the blog CMS</h3>
+      <p class="ptag">data_cms_tool › update_collection_items (batched)</p>
+      <p>Backfill <code>article-author</code> on every item still missing it, using the obsolete <code>author-name</code> and <code>author-page</code> values as the source, then clear both obsolete fields. Generate a <code>title-tag</code> under 60 characters for each of the 257 over-length pages, and rebind the template's SEO title to <code>title-tag</code> with <code>name</code> as fallback — which also removes the double space.</p>
+      <p>I will draft titles for review rather than push 257 rewrites blind.</p>
+      <span class="blocker">Binding change needs Designer</span>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pnum">06</div>
+    <div class="pbody">
+      <h3>Make category pages real landing pages</h3>
+      <p class="ptag">data_cms_tool + data_pages_tool</p>
+      <p>Add Description and Meta Description fields to the Categories collection, write copy for all ten, and rebind the template so descriptions stop rendering as raw slugs. Add <code>CollectionPage</code> schema with an <code>ItemList</code> of the posts.</p>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="pnum">07</div>
+    <div class="pbody">
+      <h3>Site-wide cleanup</h3>
+      <p class="ptag">data_pages_tool › bulk_update_pages, bulk_update_pages_schema_markup</p>
+      <p>Set <code>og:type: article</code> on the blog template; add default <code>og:image</code> to the 155 pages missing one; rewrite the breadcrumb script to three real tiers with a live homepage title; strip the empty JSON-LD tags; add FAQPage to the homepage; replace the 404 and 401 boilerplate metadata; drop the 24 redirecting URLs and the duplicate <code>Sitemap:</code> line.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>What I need from you</h2>
+  <p class="sec-note">Phase 1 I can start on as soon as you say go. The rest is gated on these. The first four are genuine blockers; the rest change the shape of the work rather than stopping it.</p>
+
+  <div class="need">
+    <h3><span class="q">01</span> A publishing window, and a branch decision</h3>
+    <p>Publishing in Webflow pushes the <em>whole site</em>, not just my changes. There are currently 12 draft blog items and roughly 20 draft pages staged in the project — if a teammate has unfinished work sitting there, my publish ships it. Tell me either a clean window, or that I should work on a Webflow branch and let you merge. The site supports branching.</p>
+  </div>
+
+  <div class="need">
+    <h3><span class="q">02</span> Designer access, or a named person for three changes</h3>
+    <p>The byline link binding, the title-tag binding, and the category description binding are Designer edits. Either give me Designer access, or tell me who does them and I will write exact step-by-step instructions and verify after.</p>
+  </div>
+
+  <div class="need">
+    <h3><span class="q">03</span> Sign-off that <span class="mono">/author/{slug}</span> is the canonical pattern</h3>
+    <p>This changes 181 internal links and needs 8+ redirects. It is the right call — that template is stronger and already carries 83 links — but it is not reversible for free, so I want it confirmed rather than assumed.</p>
+  </div>
+
+  <div class="need">
+    <h3><span class="q">04</span> Author details for the people who actually write</h3>
+    <p>For each real author I need role, a one-to-two sentence bio, a LinkedIn URL, and a headshot. <code>Person</code> schema pointing at a page with a name and nothing else is worse than no schema — it is a claim of expertise with no evidence, and it is exactly the pattern spam filters look for.</p>
+    <p>Priority order by output: Sehar Fatima (17 posts), Yousuf Sharif (13), Tereza Spaseska (6), Ioana Cozma (4).</p>
+  </div>
+
+  <div class="need">
+    <h3><span class="q">05</span> A ruling on the five placeholder authors</h3>
+    <p><code>jhon</code>, <code>sarah</code>, <code>luz</code>, <code>precious</code>, <code>peter</code> — no bios, four posts between them, and <code>jhon</code> appears to be a typo. Are these real contributors to be filled in, or should I reassign their posts to a real author and delete the records? They are currently live and indexable.</p>
+  </div>
+
+  <div class="need">
+    <h3><span class="q">06</span> Which date is authoritative</h3>
+    <p>There is a <code>publish-date</code> CMS field but no "last updated" field — the modified date currently comes from a DOM element the editors type by hand. Should <code>dateModified</code> come from Webflow's system Last Updated, or do you want a proper CMS field so editors control it? Automatic timestamps change on every trivial edit, which dilutes the freshness signal.</p>
+  </div>
+
+  <div class="need">
+    <h3><span class="q">07</span> Whether category URLs move</h3>
+    <p>Categories currently live at <code>/blog-author/categories/{slug}</code> — nested under the author folder, which is structurally wrong. Moving them to <code>/blog/category/{slug}</code> is cleaner but costs another redirect set. Your call whether it is worth it now or later.</p>
+  </div>
+
+  <div class="need">
+    <h3><span class="q">08</span> Where redirects get created</h3>
+    <p>Webflow's redirect table is not in the MCP surface. I will produce the CSV; someone needs to paste it into Site Settings → Publishing. Confirm who.</p>
+  </div>
+</section>
+
+<footer class="foot">
+  <p>Method: full sitemap crawl (445 URLs, 421 live pages fetched and parsed), headless-Chromium render to verify JavaScript-injected structured data, and direct reads of the Webflow project — 6 CMS collections, 173 pages, and the blog template's custom code.</p>
+  <p>One limitation: the Webflow CMS list endpoint ignored the offset parameter, so blog-item field statistics come from the first 100 of 402 items. The Authors collection (16) and all page-level findings are complete.</p>
+</footer>
+
+</div>

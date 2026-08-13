@@ -1,0 +1,5 @@
+# Raw crawl output — 62MB of fetched HTML, regenerate with scripts/grab.sh
+pages/
+serve/
+*.html
+!report/*.html
