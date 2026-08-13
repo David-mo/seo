@@ -3,3 +3,4 @@ pages/
 serve/
 *.html
 !report/*.html
+.test/
