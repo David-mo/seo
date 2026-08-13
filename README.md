@@ -83,3 +83,22 @@ redirects.
 The Webflow CMS list endpoint ignored the `offset` parameter, so blog-item field
 statistics come from the first 100 of 402 items. The Authors collection (16 items)
 and all page-level findings are complete.
+
+## Pre-flight and verification scripts
+
+```bash
+python3 scripts/check_dates.py   # runs the real toISODate over all 264 posts in Chromium
+./scripts/verify.sh [url]        # checks a live post's schema state before/after phase 1
+python3 scripts/build_tracker.py # regenerates report/inbeat-seo-fix-tracker.xlsx
+```
+
+`check_dates.py` slices `toISODate` out of the proposed template script rather
+than reimplementing it, so the check cannot drift from what ships. All 264 posts
+convert cleanly. It also flags two implausible publish dates —
+`2027-04-27` and `2020-11-18` — which look like content typos.
+
+The Excel tracker's Summary sheet uses live `COUNTIF` formulas over the Fix
+Tracker sheet. LibreOffice cannot open xlsx files in this container, so those
+cells carry no cached value and read as blank until the workbook is first opened
+in Excel or Google Sheets, which recalculates on open. The formulas themselves
+use only `COUNTIF`, `COUNTA` and `IFERROR`.
